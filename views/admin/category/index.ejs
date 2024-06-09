@@ -1,0 +1,53 @@
+<%- include ('../../partials/header.ejs') %>
+ 
+<%- include ('../../partials/navbar.ejs') %>
+<div class="container">
+    <hr>
+  <h2>Categorias</h2>
+  <a href="/admin/categories/new" class="btn btn-success">Adicionar Categorias</a>
+    <hr>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+           
+                <th>Id</th>
+                <th>Titulo</th>
+                <th>Slug</th>
+                <th>Açoes</th>
+            </tr>
+          
+        </thead>
+        <tbody>
+         
+                <% categories.forEach(categoria =>{ %>
+                    <tr>
+                  <th><%= categoria.id %> </th>
+                <th><%= categoria.title %></th>
+                <th><%= categoria.slug %></th>
+                <th>
+                    <a class="btn btn-warning" href="/admin/categories/<%= categoria.id %>">Editar</a>
+                    <form action="/admin/categories/delete" method="post"  style="display:inline;" onsubmit="confirmarDeletar(event, this)">
+                        <input type="hidden" name="id" id="id" value="<%= categoria.id%>">
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                   
+                </th>
+            </tr>
+             <%  })%>
+              
+           
+        </tbody>
+    </table>
+</div>
+<%- include ('../../partials/footer.ejs') %>
+<script>
+    async function confirmarDeletar(event, form){
+        event.preventDefault();
+       
+       let decision =confirm('Tens a certeza que desejas deletar? ')
+       if(decision){
+        form.submit()
+       }
+       
+    }
+</script>
