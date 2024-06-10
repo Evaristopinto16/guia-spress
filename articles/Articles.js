@@ -12,7 +12,8 @@ const Articles = connection.define('articles', {
     slug:{
         type: Sequelize.STRING,
         allowNull: false
-    }, body: {
+    },
+     body: {
         type: Sequelize.TEXT,
         allowNull: false
     }

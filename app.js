@@ -5,6 +5,7 @@ const CategoriesController= require("./categories/CategoriesController.js")
 const ArticlesController = require('./articles/articlesController.js')
 const Article = require('./articles/Articles.js')
 const Category = require('./categories/category.js') 
+const { where } = require("sequelize")
 
 require("dotenv").config()
  
@@ -33,7 +34,10 @@ app.get("/", (req, res)=>{
             ["id","DESC"]
         ]
     }).then((article)=>{
-        res.render("index", {artigos: article})
+        Category.findAll().then(Category=>{
+        res.render("index", {artigos: article, category: Category})
+
+        })
     })
    
 })
@@ -45,12 +49,39 @@ app.get('/:slug', (req, res)=>{
         }
     }).then(article => {
         if(article != undefined){
-            res.render('articles', {article: article})
+            Category.findAll().then(Category=>{
+                res.render("articles", {article: article, category: Category})
+        
+                })
+            
         }else{
             res.redirect('/')
         }
     }).catch((error)=>{
         console.error('aplicação quebrou ', error)
+        res.redirect('/')
+    })
+})
+
+app.get('/category/:slug', (req, res)=>{
+   let {slug} = req.params
+    Category.findOne({
+        where: {
+            slug: slug
+        },
+        include: [{
+            model: Article
+        }]
+    }).then(category =>{
+        if(category != undefined){
+            Category.findAll().then(categor=>{
+                res.render('index', {artigos: category.articles, category: categor} )
+            })
+        }else{
+            res.redirect('/')
+        }
+    }).catch(error=>{
+        console.error('aplicação quebrou: ', error)
         res.redirect('/')
     })
 })
